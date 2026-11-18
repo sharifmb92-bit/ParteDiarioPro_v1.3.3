@@ -862,11 +862,11 @@
       color: var(--text);
       border: 1px solid var(--border);
       border-radius: 16px;
-      max-width: 500px;
+      max-width: 520px;
       width: 100%;
       padding: 18px;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.35);
-      max-height: 88vh;
+      max-height: 90vh;
       overflow-y: auto;
     }
 
@@ -892,7 +892,7 @@
       margin-bottom: 14px;
     }
 
-    /* Grouped Summary Blocks */
+    /* Grouped Summary Blocks (PC Transcription View) */
     .res-section {
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -907,10 +907,71 @@
       text-transform: uppercase;
       letter-spacing: 0.4px;
       color: var(--muted);
-      margin-bottom: 6px;
+      margin-bottom: 7px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    .res-kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .res-kpi {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 8px;
+      text-align: center;
+    }
+
+    .res-kpi.highlight {
+      background: #1e293b;
+      color: #fff;
+      border-color: #1e293b;
+    }
+
+    body.dark-mode .res-kpi.highlight {
+      background: #18181b;
+      border-color: var(--accent);
+    }
+
+    .res-kpi small {
+      display: block;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .res-kpi strong {
+      font-size: 1.02rem;
+      color: inherit;
+    }
+
+    .res-plus-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 6px;
+    }
+
+    .res-plus-tag {
+      background: #dcfce7;
+      color: #14532d;
+      border: 1px solid #4ade80;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    body.dark-mode .res-plus-tag {
+      background: #143622;
+      color: #bbf7d0;
+      border-color: #22c55e;
     }
 
     .res-srv-card {
@@ -927,13 +988,14 @@
       align-items: center;
       margin-bottom: 6px;
       gap: 6px;
+      flex-wrap: wrap;
     }
 
     .res-srv-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 5px 10px;
-      font-size: 0.82rem;
+      font-size: 0.83rem;
     }
 
     .res-kv {
@@ -950,6 +1012,21 @@
     .res-kv strong {
       color: var(--text);
       text-align: right;
+    }
+
+    .btn-copy-mini {
+      background: rgba(15, 23, 42, 0.08);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    body.dark-mode .btn-copy-mini {
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .copy-bar-grid {
@@ -1344,9 +1421,9 @@
       <p>Organización visual sincronizada y flujo limpio día a día:</p>
       <ul>
         <li><strong>Fichaje rápido con un toque:</strong> Al tocar una casilla vacía en <em>Reloj Fichador 1 o 2</em> (Entrada o Salida), se apunta automáticamente la hora exacta de tu móvil. Si necesitas corregirla, puedes editarla encima o pulsar <em>Limpiar</em>.</li>
-        <li><strong>Ajuste automático de jornada continua y mínimo 6h:</strong> Si tu jornada es continua (sin turno partido) y el tiempo total del fichador supera la suma de tus servicios, la app calcula automáticamente esa diferencia en <em>Ajuste (hrs)</em> para cuadrar la hora exacta trabajada.</li>
-        <li><strong>Inicio limpio cada nuevo día:</strong> Al abrir la app en una fecha nueva, el formulario arranca limpio y listo para el turno de hoy (conservando solo tu nombre). Al pulsar <em>Guardar Parte</em>, se guarda en el <em>Historial</em> y se limpia automáticamente para el siguiente día.</li>
-        <li><strong>Bloques con color propio:</strong> Cada bloque tiene un tono suave distinto, y los <strong>Servicios 1 al 5</strong> comparten exactamente el mismo color en <em>Jornada</em> y en <em>Vehículos</em>.</li>
+        <li><strong>Cuadre automático de Hoja de Servicio y mínimo 6h:</strong> Si entre los servicios de un mismo bloque hay tiempos de espera (ej. bloque de 07:00 a 11:00 = 4,00 h con servicios que suman 3,75 h), la app cuadra automáticamente esos 15 min (0,25 h) en <em>Ajuste (hrs)</em>, tanto en turno de mañana, tarde o partido.</li>
+        <li><strong>Transcripción rápida al PC de la empresa:</strong> Pulsa <em>Resumen</em> (o <em>Ver</em> en el Historial) para abrir la vista en bloques ordenados con cifras grandes, etiquetas verdes de pluses y botones de copia rápida por bloque o por servicio.</li>
+        <li><strong>Inicio limpio cada nuevo día:</strong> Al pulsar <em>Guardar Parte</em>, se guarda en el <em>Historial</em> y se limpia automáticamente para el siguiente día.</li>
       </ul>
       <button type="button" id="btnEntendido" class="btn btn-success" style="width:100%;">¡Entendido!</button>
     </div>
@@ -1827,8 +1904,8 @@
         }
       }
 
-      // Motor de Reglas de Bloques Continuos, Corte, Dietas y Pluses
-      function evaluarReglasAutomaticas(sumaServicios, serviciosActivos, totalFichadorHoras) {
+      // Motor de Reglas de Bloques de Hoja de Servicio, Corte, Dietas y Pluses
+      function evaluarReglasAutomaticas(sumaServicios, serviciosActivos) {
         const ajusteInput = document.getElementById('ajusteHoras');
         const ajusteMsg = document.getElementById('ajusteAutoMsg');
         const corteAvisoEl = document.getElementById('corteAvisoMsg');
@@ -1878,19 +1955,17 @@
           }
         });
 
-        const f2In = document.getElementById('fichaje2In').value;
-        const f2Out = document.getElementById('fichaje2Out').value;
-        const esJornadaContinua = cortesPartido.length === 0 && !f2In && !f2Out;
+        const totalMinutosBloquesServicio = bloques.reduce((acc, b) => acc + (b.endMin - b.startMin), 0);
+        const horasAmplitudServicios = Math.round((totalMinutosBloquesServicio / 60) * 100) / 100;
 
         if (!manualAjuste) {
-          // Objetivo real: mínimo 6,00 h o el tiempo fichado en jornada continua si supera los servicios
           let horasObjetivo = sumaServicios;
           let motivoAjuste = '';
 
           if (sumaServicios > 0) {
-            if (esJornadaContinua && totalFichadorHoras > horasObjetivo) {
-              horasObjetivo = totalFichadorHoras;
-              motivoAjuste = `Ajuste automático (+${formatNum(horasObjetivo - sumaServicios)} h) para cuadrar con el fichador (${formatNum(totalFichadorHoras)} h en jornada continua).`;
+            if (horasAmplitudServicios > horasObjetivo) {
+              horasObjetivo = horasAmplitudServicios;
+              motivoAjuste = `Ajuste automático (+${formatNum(horasObjetivo - sumaServicios)} h) por espera interna en hoja de servicio (${formatNum(horasAmplitudServicios)} h).`;
             }
             if (horasObjetivo < 6) {
               horasObjetivo = 6;
@@ -2027,7 +2102,7 @@
         }
         sumaServicios = Math.round(sumaServicios * 100) / 100;
 
-        const totalHoras = evaluarReglasAutomaticas(sumaServicios, serviciosActivos, totalFichador);
+        const totalHoras = evaluarReglasAutomaticas(sumaServicios, serviciosActivos);
 
         document.getElementById('subtotalServiciosBadge').textContent = `${formatNum(sumaServicios)} h`;
         document.getElementById('sumaServiciosInput').value = formatNum(sumaServicios);
@@ -2129,6 +2204,7 @@
           fichaje2Out: document.getElementById('fichaje2Out').value,
           servicios,
           ajusteHoras: document.getElementById('ajusteHoras').value,
+          sumaServiciosTexto: document.getElementById('sumaServiciosInput').value,
           totalHorasTexto: document.getElementById('totalHorasFinal').textContent,
           formacionIn: document.getElementById('formacionIn').value,
           formacionOut: document.getElementById('formacionOut').value,
@@ -2301,35 +2377,57 @@
         if (p.turnoPartido) list.push(`Plus Turno Partido (${formatNum(p.turnoPartidoHoras)} h)`);
         if (p.nocturnidad) list.push(`Nocturnidad (${formatNum(p.nocturnidadHoras)} h)`);
         if (p.festivo) list.push('Plus Festivo');
-        if (p.remolque) list.push('Plus Remolque');
+        if (p.remolque) list.push(`Plus Remolque${p.remolqueDetalle ? ' (' + p.remolqueDetalle + ')' : ''}`);
         if (p.dispCorte) list.push('Disp. Corte Máx.');
         if (p.partidoEsp) list.push('P.T. Partido Esp.');
         if (p.kmsPart) list.push('Kms Particulares');
-        if (p.otros) list.push('Otros Conceptos');
+        if (p.otros) list.push(`Otros Conceptos${p.remolqueDetalle && !p.remolque ? ' (' + p.remolqueDetalle + ')' : ''}`);
         return list;
       }
 
       function buildResumenHTML(data) {
         const plusesActivos = getPlusesList(data);
+        const sumaSrvTxt = data.sumaServiciosTexto || formatNum(
+          (data.servicios || []).reduce((acc, s) => acc + calcDiffHours(s.inicio, s.fin), 0)
+        );
 
         let html = `
           <div class="res-section" style="background:var(--fichador-bg); border-color:var(--fichador-border);">
             <div class="res-section-title">
-              <span>1. Cabecera y Jornada</span>
+              <span>1. Jornada, Fichador y Pluses</span>
               <span style="color:var(--accent);">${data.fecha || '-'}</span>
+            </div>
+            <div class="res-kpi-strip">
+              <div class="res-kpi">
+                <small>Ajuste</small>
+                <strong>${formatNum(data.ajusteHoras)} h</strong>
+              </div>
+              <div class="res-kpi">
+                <small>Servicios</small>
+                <strong>${sumaSrvTxt} h</strong>
+              </div>
+              <div class="res-kpi highlight">
+                <small>Total Horas</small>
+                <strong>${data.totalHorasTexto || '0,00'} h</strong>
+              </div>
             </div>
             <table class="summary-table">
               <tr><td>Conductor</td><td>${data.nombre || '-'}</td></tr>
               <tr><td>Fichaje 1</td><td>${data.fichaje1In || '--:--'} → ${data.fichaje1Out || '--:--'}</td></tr>
               ${(data.fichaje2In || data.fichaje2Out) ? `<tr><td>Fichaje 2</td><td>${data.fichaje2In || '--:--'} → ${data.fichaje2Out || '--:--'}</td></tr>` : ''}
-              <tr><td>Ajuste / Total Horas</td><td>${formatNum(data.ajusteHoras)} h / <strong>${data.totalHorasTexto} h</strong></td></tr>
-              <tr><td>Dietas y Pluses</td><td>${plusesActivos.length ? plusesActivos.join(', ') : 'Ninguno'}</td></tr>
               ${(data.formacionIn || data.formacionOut || data.formacionDesc) ? `<tr><td>Formación</td><td>${data.formacionIn || ''}-${data.formacionOut || ''} ${data.formacionDesc || ''}</td></tr>` : ''}
             </table>
+            <div style="margin-top:8px;">
+              <div style="font-size:0.72rem; font-weight:700; color:var(--muted); margin-bottom:4px;">DIETAS Y PLUSES A MARCAR EN PC:</div>
+              ${plusesActivos.length
+                ? `<div class="res-plus-pills">${plusesActivos.map(pl => `<span class="res-plus-tag">✓ ${pl}</span>`).join('')}</div>`
+                : `<div style="font-size:0.8rem; color:var(--muted);">Ninguno marcado</div>`
+              }
+            </div>
           </div>
         `;
 
-        html += `<div class="res-section-title" style="margin:8px 0 6px;"><span>2. Servicios Agrupados (Con su Bus y Km)</span></div>`;
+        html += `<div class="res-section-title" style="margin:8px 0 6px;"><span>2. Servicios + Vehículo Asociado</span></div>`;
 
         let hayServicios = false;
         for (let i = 0; i < 5; i++) {
@@ -2350,17 +2448,18 @@
           html += `
             <div class="res-srv-card srv-theme-${num}">
               <div class="res-srv-head">
-                <span class="badge">Servicio ${num} · [${tipos}]</span>
+                <span class="badge">S${num} · [${tipos}]</span>
                 <strong style="font-size:0.85rem;">${s.inicio || '--:--'} → ${s.fin || '--:--'} (${hrsSrv} h)</strong>
+                <button type="button" class="btn-copy-mini" data-copy-srv="${i}">Copiar S${num}</button>
               </div>
-              <div style="font-size:0.84rem; font-weight:700; margin-bottom:6px; color:var(--text);">
+              <div style="font-size:0.86rem; font-weight:700; margin-bottom:6px; color:var(--text);">
                 ${s.desc || 'Sin descripción'}
               </div>
               <div class="res-srv-grid">
                 <div class="res-kv"><span>Bus Nº:</span><strong>${v.bus || '-'}</strong></div>
                 <div class="res-kv"><span>Nº PAX:</span><strong>${s.pax || '0'}</strong></div>
                 <div class="res-kv"><span>Km Ini:</span><strong>${v.kmIn || '0'}</strong></div>
-                <div class="res-kv"><span>Km Fin:</span><strong>${v.kmOut || '0'} (${diffKm} km)</strong></div>
+                <div class="res-kv"><span>Km Fin:</span><strong>${v.kmOut || '0'} (+${diffKm})</strong></div>
                 <div class="res-kv"><span>Lavado:</span><strong>${v.lavado || 'NO'}</strong></div>
                 <div class="res-kv"><span>Aceite:</span><strong>${v.aceite ? v.aceite + ' L' : '-'}</strong></div>
                 ${(r.litros || r.euros || r.kms) ? `
@@ -2376,33 +2475,56 @@
           html += `<p style="font-size:0.82rem; color:var(--muted); margin-bottom:10px;">Sin servicios registrados.</p>`;
         }
 
-        if ((data.estaciones && data.estaciones.length) || data.adblueLitros || data.incidenciasServicio || data.objPerdido || data.anomaliaBus || data.reclamacion === 'si') {
+        if ((data.estaciones && data.estaciones.length) || data.adblueLitros || data.incidenciasServicio || data.objPerdido || data.anomaliaBus || data.reclamacion === 'si' || data.sugerencias) {
           html += `<div class="res-section" style="background:var(--sec-incidencias-bg); border-color:var(--sec-incidencias-border);">
             <div class="res-section-title"><span>3. Repostaje General / Incidencias</span></div>
             <table class="summary-table">`;
           if (data.estaciones && data.estaciones.length) html += `<tr><td>Estación</td><td>${data.estaciones.join(', ')}</td></tr>`;
           if (data.adblueLitros) html += `<tr><td>AdBlue</td><td>${data.adblueLitros} L</td></tr>`;
           if (data.incidenciasServicio) html += `<tr><td>Incidencias</td><td>${data.incidenciasServicio}</td></tr>`;
-          if (data.objPerdido) html += `<tr><td>Obj. Perdido</td><td>${data.objPerdido} (Bus ${data.objBus || '-'})</td></tr>`;
+          if (data.objPerdido) html += `<tr><td>Obj. Perdido</td><td>${data.objPerdido} (Bus ${data.objBus || '-'}${data.objExpedicion ? ', Exp. ' + data.objExpedicion : ''})</td></tr>`;
+          if (data.objObs) html += `<tr><td>Obs. Objeto</td><td>${data.objObs}</td></tr>`;
           if (data.reclamacion === 'si') html += `<tr><td>Reclamación</td><td>Hoja ${data.hojaReclamacion || '-'} / Libro ${data.libroReclamacion || '-'}</td></tr>`;
           if (data.anomaliaBus || data.anomaliaDesc) html += `<tr><td>Anomalía Bus ${data.anomaliaBus || '-'}</td><td>${data.anomaliaDesc || '-'}</td></tr>`;
+          if (data.sugerencias) html += `<tr><td>Sugerencias</td><td>${data.sugerencias}</td></tr>`;
           html += `</table></div>`;
         }
 
         const cashActivos = (data.arqueo || []).filter(a => Number(a.qty) > 0);
+        const descActivos = (data.descuentos || []).filter(d => d.concepto || Number(d.importe) !== 0);
         html += `<div class="res-section">
           <div class="res-section-title"><span>4. Arqueo Recaudación</span><span>${data.totalFinalTexto || '0,00 €'}</span></div>
           <table class="summary-table">`;
-        cashActivos.forEach(a => {
-          html += `<tr><td>${formatNum(a.valor)} € x ${a.qty}</td><td>${formatNum(a.valor * a.qty)} €</td></tr>`;
-        });
+        if (cashActivos.length) {
+          cashActivos.forEach(a => {
+            html += `<tr><td>${formatNum(a.valor)} € × ${a.qty}</td><td>${formatNum(a.valor * a.qty)} €</td></tr>`;
+          });
+        } else {
+          html += `<tr><td colspan="2" style="text-align:center; color:var(--muted);">Sin efectivo desglosado</td></tr>`;
+        }
         html += `<tr><td>TOTAL LIQUIDACIÓN</td><td>${data.totalBrutoTexto || '0,00 €'}</td></tr>`;
-        (data.descuentos || []).filter(d => d.concepto || Number(d.importe) !== 0).forEach(d => {
+        descActivos.forEach(d => {
           html += `<tr><td>Desc: ${d.concepto || 'Ajuste'}</td><td>-${formatNum(d.importe)} €</td></tr>`;
         });
         html += `<tr style="background:var(--accent-light);"><td><strong>TOTAL FINAL</strong></td><td><strong>${data.totalFinalTexto || '0,00 €'}</strong></td></tr></table></div>`;
 
         return html;
+      }
+
+      function buildSingleServicioCopyText(data, idx) {
+        const s = (data.servicios || [])[idx] || {};
+        const v = (data.vehiculos || [])[idx] || {};
+        const r = (data.repostajes || [])[idx] || {};
+        const tipos = [s.r ? 'R' : '', s.esc ? 'Esc' : '', s.d ? 'D' : ''].filter(Boolean).join('/');
+        const hrsSrv = formatNum(calcDiffHours(s.inicio, s.fin));
+        const lines = [
+          `S${idx + 1} [${tipos}] ${s.inicio || '--:--'}-${s.fin || '--:--'} (${hrsSrv}h) | ${s.desc || ''} | PAX: ${s.pax || 0}`,
+          `Bus: ${v.bus || '-'} | Km Ini: ${v.kmIn || 0} | Km Fin: ${v.kmOut || 0} | Lavado: ${v.lavado || 'NO'}${v.aceite ? ' | Aceite: ' + v.aceite + 'L' : ''}`
+        ];
+        if (r.litros || r.euros) {
+          lines.push(`Gasoil: ${r.litros || 0}L (${r.euros || 0}€) Km: ${r.kms || '-'}`);
+        }
+        return lines.join('\n');
       }
 
       function buildPlainCopyText(data, mode = 'all') {
@@ -2427,12 +2549,7 @@
             const v = (data.vehiculos || [])[i] || {};
             const r = (data.repostajes || [])[i] || {};
             if (!(s.inicio || s.fin || s.desc || v.bus || v.kmIn || v.kmOut)) continue;
-            const tipos = [s.r ? 'R' : '', s.esc ? 'Esc' : '', s.d ? 'D' : ''].filter(Boolean).join('/');
-            lines.push(`SERVICIO ${i + 1} [${tipos}]: ${s.inicio || '--:--'} - ${s.fin || '--:--'} | ${s.desc || ''} | PAX: ${s.pax || 0}`);
-            lines.push(`  Bus: ${v.bus || '-'} | Km Ini: ${v.kmIn || 0} -> Km Fin: ${v.kmOut || 0} | Lavado: ${v.lavado || 'NO'}`);
-            if (r.litros || r.euros) {
-              lines.push(`  Repostaje: ${r.litros || 0} L (${r.euros || 0} €) Km: ${r.kms || '-'}`);
-            }
+            lines.push(buildSingleServicioCopyText(data, i));
           }
         }
 
@@ -2455,7 +2572,16 @@
       function openResumenModal(data, titulo = 'Resumen para Ordenador') {
         currentResumenData = data;
         document.getElementById('resumenModalTitulo').textContent = titulo;
-        document.getElementById('resumenContenido').innerHTML = buildResumenHTML(data);
+        const cont = document.getElementById('resumenContenido');
+        cont.innerHTML = buildResumenHTML(data);
+
+        cont.querySelectorAll('[data-copy-srv]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.dataset.copySrv);
+            copyToClipboard(buildSingleServicioCopyText(data, idx), `Servicio ${idx + 1} copiado`);
+          });
+        });
+
         document.getElementById('modalResumen').classList.add('open');
       }
 
@@ -2600,7 +2726,6 @@
           await resetNuevoParte();
         }
 
-        // Fichaje automático con un toque cuando la casilla está vacía (Fichaje 1 y 2)
         document.querySelectorAll('[data-autofichaje]').forEach(input => {
           const stampIfEmpty = async () => {
             if (!input.value) {
@@ -2616,7 +2741,6 @@
           input.addEventListener('focus', stampIfEmpty);
         });
 
-        // Botón rápido Limpiar en Fichaje 1 y Fichaje 2
         document.querySelectorAll('[data-clear-fichaje]').forEach(btn => {
           btn.addEventListener('click', async () => {
             const num = btn.dataset.clearFichaje;
